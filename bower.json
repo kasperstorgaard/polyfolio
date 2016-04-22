@@ -1,0 +1,29 @@
+{
+  "name": "polyfolio",
+  "description": "a portfolio app built in polymer",
+  "main": "index.js",
+  "authors": [
+    "kasperstorgaard"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "portfolio",
+    "polymer"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.4.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.2.2",
+    "iron-test-helpers": "^1.2.3"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "polyfolio",
+  "version": "0.0.1",
+  "description": "a portfolio app built in polymer",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kasperstorgaard/polyfolio.git"
+  },
+  "keywords": [
+    "portfolio",
+    "polymer"
+  ],
+  "author": "kasperstorgaard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kasperstorgaard/polyfolio/issues"
+  },
+  "homepage": "https://github.com/kasperstorgaard/polyfolio#readme",
+  "devDependencies": {
+    "polyserve": "^0.8.0",
+    "web-component-tester": "^4.2.2"
+  }
+}
