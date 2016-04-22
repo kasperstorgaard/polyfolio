@@ -1,0 +1,29 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="./firebase.html">
+
+<dom-module id="pf--firebase-root">
+    <template>
+        <style is="custom-style">
+        </style>
+    </template>
+    <script>
+        Polymer({
+            is: 'pf--firebase-root',
+
+            properties: {
+                path: String,
+                ref: {
+                    type: Object,
+                    value: null,
+                    notifies: true,
+                    readOnly: true,
+                    computed: '_computeRef(path)'
+                }
+            },
+            
+            _computeRef: function(path){
+                return new Firebase(path);
+            }
+        });
+    </script>
+</dom-module>
