@@ -1,0 +1,36 @@
+<script>
+    (function() {
+        window.polyfolio = window.polyfolio || {};
+        
+        window.polyfolio.FirebaseTestHelpers= {
+            stub: stubFirebase,
+            restore: restoreFirebase
+        };
+
+        function stubFirebase() {
+            function FirebaseStub() {
+                this.orderByChild = sinon.spy();
+                this.orderByKey = sinon.spy();
+                this.orderByValue = sinon.spy();
+                this.orderByPriority = sinon.spy();
+                this.limit = sinon.spy();
+                this.limitToFirst = sinon.spy();
+                this.limitToLast = sinon.spy();
+                this.endAt = sinon.spy();
+                this.startAt = sinon.spy();
+                this.equalTo = sinon.spy();
+                this.on = (cb) => cb; 
+                this.off = (cb) => cb;
+                this.child = () => { 
+                    return new Firebase();
+                };
+            }
+            sinon.stub(window, 'Firebase', FirebaseStub);  
+        }
+
+        function restoreFirebase() {
+            window.Firebase.restore();
+        }
+    })();
+</script>
+
