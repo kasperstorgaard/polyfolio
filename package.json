@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "a portfolio app built in polymer",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
-    "test": "npm run test"
+    "test": "wct"
   },
   "repository": {
     "type": "git",
