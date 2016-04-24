@@ -1,8 +1,112 @@
+<link rel="import" href="./firebase.html">
 <script>
-    var polyfolio = window.polyfolio || {};
-
-    polyfolio.FirebaseBehavior = {
-        properties: {
-
-        }
-    };
+    (function(){
+        window.polyfolio = window.polyfolio || {};
+        const QUERY_KEYS = ['orderByChild', 'orderByKey', 'orderByValue', 'orderByPriority', 'limit',
+                            'limitToLast', 'limitToFirst', 'startAt', 'endAt', 'equalTo'];
+        const FIREBASE_EVENTS = ['value', 'child_added', 'child_changed', 'child_moved',
+                                 'child_removed'];
+        polyfolio.FirebaseBehavior = {
+            properties: {
+                parentRef: Object,
+                path: String,
+                ref: {
+                    type: Object,
+                    readOnly: true,
+                    notifies: true,
+                    computed: '_createRef(parentRef, path, ' + QUERY_KEYS.join(', ') + ')'
+                },
+                orderByChild: {
+                    type: String,
+                    value: null,
+                },
+                orderByKey: {
+                    type: Boolean,
+                    value: false
+                },
+                orderByValue: {
+                    type: Boolean,
+                    value: false
+                },
+                orderByPriority: {
+                    type: Boolean,
+                    value: false
+                },
+                limit: {
+                    type: Number,
+                    value: 0 
+                },
+                limitToLast: {
+                    type: Number,
+                    value: 0
+                },
+                limitToFirst: {
+                    type: Number,
+                    value: 0
+                },
+                startAt: {
+                    value: null
+                    //type: Any
+                },
+                endAt: {
+                    value: null
+                    //type: Any
+                },
+                equalTo: {
+                    value: null
+                    //type: Any 
+                },
+                _firebaseListeners: {
+                    type: Object,
+                    value: () => {
+                        return {};
+                    } 
+                }
+            },
+            
+            //private
+            _createRef: function(parentRef, path, ...queryVals) {
+                if (this.ref) {
+                    this._removeFirebaseListeners(this.ref, FIREBASE_EVENTS);
+                }
+                if (!path || !parentRef) {
+                    return null;
+                }
+                let ref = parentRef.child(path);
+                this._addFirebaseQueries(ref, QUERY_KEYS);
+                this._addFirebaseListeners(ref, FIREBASE_EVENTS);
+                return ref;
+            },
+            _addFirebaseQueries: function(ref, keys) {
+                keys.forEach((key) => {
+                    this._addFirebaseQuery(ref, key);
+                });
+            },
+            _addFirebaseQuery: function(ref, queryKey) {
+                var val = this[queryKey];
+                if (!val) {
+                    return;
+                }
+                if (val === true) {
+                    ref[queryKey]();
+                    return;
+                }
+                ref[queryKey](val);
+            },
+            _addFirebaseListeners: function(ref, keys) {
+                keys.forEach((key) => {
+                    let listener = ref.on(key, (snapshot) => {
+                        this.fire('firebase_' + key, snapshot);
+                    });
+                    this._firebaseListeners[key] = listener;
+                });
+            },
+            _removeFirebaseListeners: function(ref, keys) {
+                this.fire('firebase_reset');
+                keys.forEach((key) => {
+                    ref.off(key, this._firebaseListeners[key]);
+                });
+            }
+        };
+    })();
+</script>

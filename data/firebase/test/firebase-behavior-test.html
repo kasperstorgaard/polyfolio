@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <link rel="import" href="../../../bower_components/polymer/polymer.html">
+    <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+
+    <link rel="import" href="../firebase-behavior.html">
+</head>
+<body>
+    <test-fixture id="base">
+        <template>
+            <x-firebase-behavior>
+            </x-firebase-behavior>
+        </template>
+    </test-fixture>
+
+    <test-fixture id="items">
+        <template>
+            <x-firebase-behavior>
+            </x-firebase-behavior>
+        </template>
+    </test-fixture>
+    <script>
+        addEventListener('WebComponentsReady', () => {
+            Polymer({
+                is: 'x-firebase-behavior',
+                behaviors: [polyfolio.FirebaseBehavior]
+            });
+        });
+
+        describe('<firebase-behavior>', function() {
+            let baseEl, itemsEl;
+
+            beforeEach(() => {
+                stubFirebase();
+                baseEl = fixture('base');
+                itemsEl = fixture('items');
+                itemsEl.parentRef = new Firebase('foo');
+                itemsEl.path = '/items';
+            });
+
+            afterEach(() => {
+                restoreFirebase();
+            });
+
+            context('properties', () => {
+                it('defines the "parentRef" prop', () => {
+                    expect(baseEl.parentRef).to.be.defined;
+                });
+
+                it('defines the "path" prop', () => {
+                    expect(baseEl.path).to.be.defined;
+                });
+
+                it('defines the "ref" prop', () => {
+                    expect(baseEl.ref).to.be.defined;
+                });
+
+                it('defines the "orderByChild" prop', () => {
+                    expect(baseEl.orderByChild).to.be.defined;
+                });
+
+                it('defines the "orderByKey" prop', () => {
+                    expect(baseEl.orderByKey).to.be.defined;
+                });
+
+                it('defines the "orderByValue" prop', () => {
+                    expect(baseEl.orderByValue).to.be.defined;
+                });
+
+                it('defines the "orderByPriority" prop', () => {
+                    expect(baseEl.orderByPriority).to.be.defined;
+                });
+
+                it('defines the "limit" prop', () => {
+                    expect(baseEl.limit).to.be.defined;
+                });
+
+                it('defines the "limitToFirst" prop', () => {
+                    expect(baseEl.limitToFirst).to.be.defined;
+                });
+
+                it('defines the "limitToLast" prop', () => {
+                    expect(baseEl.limitToLast).to.be.defined;
+                });
+
+                it('defines the "endAt" prop', () => {
+                    expect(baseEl.endAt).to.be.defined;
+                });
+
+                it('defines the "startAt" prop', () => {
+                    expect(baseEl.startAt).to.be.defined;
+                });
+
+                it('defines the "equalTo" prop', () => {
+                    expect(baseEl.equalTo).to.be.defined;
+                });
+            });
+
+            context('creation', () => {
+                it('should create a firebase ref when parentRef and path', () => {
+                    expect(itemsEl.ref).to.have.property('on');
+                });
+            });
+
+            context('update', () => {
+                it('should unbind listeners when updated', () => {
+                    let spy = sinon.spy(itemsEl.ref, 'off');
+                    itemsEl.path = 'newpath';
+                    expect(spy).to.have.been.called;
+                });
+
+                it('should fire reset when updated', () => {
+                    let spy = sinon.spy();
+                    itemsEl.addEventListener('firebase_reset', spy);
+                    itemsEl.path = 'newpath';
+                    expect(spy).to.have.been.calledOnce;
+                });
+            });
+
+            context('queries', () => {
+                it('should call orderByChild on ref when defined', () => {
+                    itemsEl.orderByChild = 'name';
+                    expect(itemsEl.ref.orderByChild).to.have.been.calledWith('name');
+                });
+
+                it('should call orderByKey on ref when defined', () => {
+                    itemsEl.orderByKey = true;
+                    expect(itemsEl.ref.orderByKey).to.have.been.calledOnce;
+                });
+
+                it('should call orderByValue when defined', () => {
+                    itemsEl.orderByValue = true;
+                    expect(itemsEl.ref.orderByValue).to.have.been.calledOnce;
+                });
+
+                it('should call orderByPriority when defined', () => {
+                    itemsEl.orderByPriority = true;
+                    expect(itemsEl.ref.orderByPriority).to.have.been.calledOnce;
+                }); 
+
+                it('should call limit when defined', () => {
+                    itemsEl.limit = 2;
+                    expect(itemsEl.ref.limit).to.have.been.calledWith(2);
+                });
+
+                it('should call limitToFirst when defined', () => {
+                    itemsEl.limitToFirst = 3;
+                    expect(itemsEl.ref.limitToFirst).to.have.been.calledWith(3);
+                });
+
+                it('should call limitToLast when defined', () => {
+                    itemsEl.limitToLast = 1;
+                    expect(itemsEl.ref.limitToLast).to.have.been.calledWith(1);
+                });
+
+                it('should call endAt when defined', () => {
+                    itemsEl.endAt = 'foo';
+                    expect(itemsEl.ref.endAt).to.have.been.calledWith('foo');
+                });
+
+                it('should call startAt when defined', () => {
+                    itemsEl.startAt = 'bar';
+                    expect(itemsEl.ref.startAt).to.have.been.calledWith('bar');
+                });
+
+                it('should call equalTo when defined', () => {
+                    itemsEl.equalTo = 'baz';
+                    expect(itemsEl.ref.equalTo).to.have.been.calledWith('baz');
+                });
+            });
+
+            // helpers
+            function stubFirebase() {
+                function FirebaseStub() {
+                    this.orderByChild = sinon.spy();
+                    this.orderByKey = sinon.spy();
+                    this.orderByValue = sinon.spy();
+                    this.orderByPriority = sinon.spy();
+                    this.limit = sinon.spy();
+                    this.limitToFirst = sinon.spy();
+                    this.limitToLast = sinon.spy();
+                    this.endAt = sinon.spy();
+                    this.startAt = sinon.spy();
+                    this.equalTo = sinon.spy();
+                    this.on = (cb) => cb; 
+                    this.off = (cb) => cb;
+                    this.child = () => { 
+                        return new Firebase();
+                    };
+                }
+                sinon.stub(window, 'Firebase', FirebaseStub);  
+            }
+
+            function restoreFirebase() {
+                window.Firebase.restore();
+            }
+        })
+    </script>
+</body>
+            
