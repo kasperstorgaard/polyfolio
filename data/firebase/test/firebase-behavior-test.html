@@ -26,10 +26,10 @@
         </template>
     </test-fixture>
     <script>
-        addEventListener('WebComponentsReady', () => {
-            Polymer({
+        addeventlistener('webcomponentsready', () => {
+            polymer({
                 is: 'x-firebase-behavior',
-                behaviors: [polyfolio.FirebaseBehavior]
+                behaviors: [polyfolio.firebasebehavior]
             });
         });
 
@@ -46,60 +46,6 @@
 
             afterEach(() => {
                 polyfolio.FirebaseTestHelpers.restore();
-            });
-
-            context('properties', () => {
-                it('defines the "parentRef" prop', () => {
-                    expect(baseEl.parentRef).to.be.defined;
-                });
-
-                it('defines the "path" prop', () => {
-                    expect(baseEl.path).to.be.defined;
-                });
-
-                it('defines the "ref" prop', () => {
-                    expect(baseEl.ref).to.be.defined;
-                });
-
-                it('defines the "orderByChild" prop', () => {
-                    expect(baseEl.orderByChild).to.be.defined;
-                });
-
-                it('defines the "orderByKey" prop', () => {
-                    expect(baseEl.orderByKey).to.be.defined;
-                });
-
-                it('defines the "orderByValue" prop', () => {
-                    expect(baseEl.orderByValue).to.be.defined;
-                });
-
-                it('defines the "orderByPriority" prop', () => {
-                    expect(baseEl.orderByPriority).to.be.defined;
-                });
-
-                it('defines the "limit" prop', () => {
-                    expect(baseEl.limit).to.be.defined;
-                });
-
-                it('defines the "limitToFirst" prop', () => {
-                    expect(baseEl.limitToFirst).to.be.defined;
-                });
-
-                it('defines the "limitToLast" prop', () => {
-                    expect(baseEl.limitToLast).to.be.defined;
-                });
-
-                it('defines the "endAt" prop', () => {
-                    expect(baseEl.endAt).to.be.defined;
-                });
-
-                it('defines the "startAt" prop', () => {
-                    expect(baseEl.startAt).to.be.defined;
-                });
-
-                it('defines the "equalTo" prop', () => {
-                    expect(baseEl.equalTo).to.be.defined;
-                });
             });
 
             context('creation', () => {
