@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <link rel="import" href="../../../bower_components/polymer/polymer.html">
+    <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+
+    <link rel="import" href="../data-collection.html">
+</head>
+<body>
+    <test-fixture id="base">
+        <template>
+            <data-collection>
+            </data-collection>
+        </template>
+    </test-fixture>
+
+    <script>
+        describe('<data-collection>', function() {
+            let baseEl;
+
+            beforeEach(() => {
+                stubFirebase();
+                baseEl = fixture('base');
+            });
+
+            afterEach(() => {
+                restoreFirebase();
+            });
+
+            context('properties', () => {
+                it('defines the "parentRef" prop', () => {
+                    expect(baseEl.parentRef).to.be.defined;
+                });
+            });
+
+            // helpers
+            function stubFirebase() {
+                function FirebaseStub() {
+                    this.orderByChild = sinon.spy();
+                    this.orderByKey = sinon.spy();
+                    this.orderByValue = sinon.spy();
+                    this.orderByPriority = sinon.spy();
+                    this.limit = sinon.spy();
+                    this.limitToFirst = sinon.spy();
+                    this.limitToLast = sinon.spy();
+                    this.endAt = sinon.spy();
+                    this.startAt = sinon.spy();
+                    this.equalTo = sinon.spy();
+                    this.on = (cb) => cb; 
+                    this.off = (cb) => cb;
+                    this.child = () => { 
+                        return new Firebase();
+                    };
+                }
+                sinon.stub(window, 'Firebase', FirebaseStub);  
+            }
+
+            function restoreFirebase() {
+                window.Firebase.restore();
+            }
+        })
+    </script>
+</body>
+ 
